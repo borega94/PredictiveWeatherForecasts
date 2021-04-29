@@ -26,6 +26,14 @@ feldbergWetter['HAGEL'] = feldbergHageltage
 # Löscht alle Zeilen in der Spalte HAGEL in denen nan steht
 feldbergWetter = feldbergWetter[feldbergWetter['HAGEL'].notna()]
 
+# Löschen der Spalten die irrelevant sind
+feldbergWetter = feldbergWetter.drop(columns=['QN_3', 'QN_4', 'eor'])
 
-
+# Umbenennung der Spaltennamen
+feldbergWetter = feldbergWetter.rename(columns={'  FX': 'WindstaerkeMax','  FM': 'WindstarkeMittel',
+                                ' RSK': 'Niederschlagshoehe', 'RSKF': 'Niederschlagsform', ' SDK': 'Sonnenscheindauer',
+                                'SHK_TAG': 'Schneehoehe', '  NM': 'Bewoelkung', ' VPM': 'DampfdruckMittel',
+                                '  PM': 'LuftdruckMittel', ' TMK': 'TemperaturMittel', ' UPM': 'RelativeFeuchteMittel',
+                                ' TXK': 'LufttemperaturMax', ' TNK': 'LufttemperaturMin2m', ' TGK': 'LufttemperaturMin5cm',
+                                'HAGEL': 'Hagel'})
 
