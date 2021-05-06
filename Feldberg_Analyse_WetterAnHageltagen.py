@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 feldbergHageltage = pd.read_csv('produkt_wetter_tag_19490101_20140131_01346.txt', sep=";")
@@ -38,84 +39,65 @@ feldbergWetter = feldbergWetter.rename(columns={'  FX': 'WindstaerkeMax','  FM':
                                 ' TXK': 'LufttemperaturMax', ' TNK': 'LufttemperaturMin2m', ' TGK': 'LufttemperaturMin5cm',
                                 'HAGEL': 'Hagel'})
 
+# ---------------------------------------------------------------------------------------
+# Zwischenstand : Datei mit Werten in Dataframe umgewandelt und Spalten eindeutig benannt.
+# Hagel in der Tabelle mit dem Wetter angehängt
+# Zeilen gelöscht in denen kein Wert für Hagel vorhanden ist
+# ---------------------------------------------------------------------------------------
+
 # Anzeigen der Spalten
 # print(feldbergWetter.columns)
 
-
+# Anzeigen aller Spalten bei einer Ausgabe mit 'print'
 pd.set_option('max_columns', None)
 #print(feldbergWetter.head(20))
 
-#print('Variable ist:'+str(feldbergWetter.iloc[[1],[1]]))
 
-# -999 Werte in jeder Spalte zählen
-
-ausgabe = {
-
-
-'fehlwerteWindstaerkeMax' : feldbergWetter.WindstaerkeMax==-999.0,
-'fehlwerteWindstaerkeMittel' : feldbergWetter.WindstaerkeMittel==-999.0,
-'fehlwerteNiederschlagshoehe' : feldbergWetter.Niederschlagshoehe==-999.0,
-'fehlwerteNiederschlagsform' : feldbergWetter.Niederschlagsform==-999.0,
-'fehlwerteSonnenscheindauer' : feldbergWetter.Sonnenscheindauer==-999.0,
-'fehlwerteSchneehoehe' : feldbergWetter.Schneehoehe==-999.0,
-'fehlwerteBewoelkung' : feldbergWetter.Bewoelkung==-999.0,
-'fehlwerteDampfdruckMittel' : feldbergWetter.DampfdruckMittel==-999.0,
-'fehlwerteLuftdruckMittel' : feldbergWetter.LuftdruckMittel==-999.0,
-'fehlwerteTemperaturMittel' : feldbergWetter.TemperaturMittel==-999.0,
-'fehlwerteRelativeFeuchteMittel' : feldbergWetter.RelativeFeuchteMittel==-999.0,
-'fehlwerteLufttemperaturMax' : feldbergWetter.LufttemperaturMax==-999.0,
-'fehlwerteLufttemperaturMin2m' : feldbergWetter.LufttemperaturMin2m==-999.0,
-'fehlwerteLufttemperaturMin5cm' : feldbergWetter.LufttemperaturMin5cm==-999.0,
-'fehlwerteHagel' : feldbergWetter.Hagel==-999.0
-
+# -999.0 Werte in jeder Spalte zählen / -999.0 = Fehlwert
+fehlwerteInSpalten = {
+    'fehlwerteWindstaerkeMax' : feldbergWetter.WindstaerkeMax==-999.0,
+    'fehlwerteWindstaerkeMittel' : feldbergWetter.WindstaerkeMittel==-999.0,
+    'fehlwerteNiederschlagshoehe' : feldbergWetter.Niederschlagshoehe==-999.0,
+    'fehlwerteNiederschlagsform' : feldbergWetter.Niederschlagsform==-999.0,
+    'fehlwerteSonnenscheindauer' : feldbergWetter.Sonnenscheindauer==-999.0,
+    'fehlwerteSchneehoehe' : feldbergWetter.Schneehoehe==-999.0,
+    'fehlwerteBewoelkung' : feldbergWetter.Bewoelkung==-999.0,
+    'fehlwerteDampfdruckMittel' : feldbergWetter.DampfdruckMittel==-999.0,
+    'fehlwerteLuftdruckMittel' : feldbergWetter.LuftdruckMittel==-999.0,
+    'fehlwerteTemperaturMittel' : feldbergWetter.TemperaturMittel==-999.0,
+    'fehlwerteRelativeFeuchteMittel' : feldbergWetter.RelativeFeuchteMittel==-999.0,
+    'fehlwerteLufttemperaturMax' : feldbergWetter.LufttemperaturMax==-999.0,
+    'fehlwerteLufttemperaturMin2m' : feldbergWetter.LufttemperaturMin2m==-999.0,
+    'fehlwerteLufttemperaturMin5cm' : feldbergWetter.LufttemperaturMin5cm==-999.0,
+    'fehlwerteHagel' : feldbergWetter.Hagel==-999.0
 }
+df_Fehlwerte = pd.DataFrame(fehlwerteInSpalten)
+# Liefert die Anzahl der Fehlwerte in jeder Spalte
+print(df_Fehlwerte.sum())
 
-data = pd.DataFrame(ausgabe)
-print(data.sum())
-
-"""
-fehlwerteWindstaerkeMax = feldbergWetter.WindstaerkeMax==-999.0
-fehlwerteWindstaerkeMittel = feldbergWetter.WindstaerkeMittel==-999.0
-fehlwerteNiederschlagshoehe = feldbergWetter.Niederschlagshoehe==-999.0
-fehlwerteNiederschlagsform = feldbergWetter.Niederschlagsform==-999.0
-fehlwerteSonnenscheindauer = feldbergWetter.Sonnenscheindauer==-999.0
-fehlwerteSchneehoehe = feldbergWetter.Schneehoehe==-999.0
-fehlwerteBewoelkung = feldbergWetter.Bewoelkung==-999.0
-fehlwerteDampfdruckMittel = feldbergWetter.DampfdruckMittel==-999.0
-fehlwerteLuftdruckMittel = feldbergWetter.LuftdruckMittel==-999.0
-fehlwerteTemperaturMittel = feldbergWetter.TemperaturMittel==-999.0
-fehlwerteRelativeFeuchteMittel = feldbergWetter.RelativeFeuchteMittel==-999.0
-fehlwerteLufttemperaturMax = feldbergWetter.LufttemperaturMax==-999.0
-fehlwerteLufttemperaturMin2m = feldbergWetter.LufttemperaturMin2m==-999.0
-fehlwerteLufttemperaturMin5cm = feldbergWetter.LufttemperaturMin5cm==-999.0
-fehlwerteHagel = feldbergWetter.Hagel==-999.0"""
-"""
-data = pd.DataFrame([fehlwerteWindstaerkeMax, fehlwerteWindstaerkeMittel, fehlwerteNiederschlagshoehe, fehlwerteNiederschlagsform,
-        fehlwerteSonnenscheindauer, fehlwerteSchneehoehe, fehlwerteBewoelkung, fehlwerteDampfdruckMittel,
-        fehlwerteLuftdruckMittel, fehlwerteTemperaturMittel, fehlwerteRelativeFeuchteMittel, fehlwerteLufttemperaturMax,
-        fehlwerteLufttemperaturMin2m, fehlwerteLufttemperaturMin5cm, fehlwerteHagel])
-"""
-
-#print(data.head(2))
-#df_Fehlwerte = pd.DataFrame(data)
-
-
-
+# Spalte WindstaerkeMittel aufgrund zu vieler Fehlwerte droppen
+#feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
 
 
 """
-feldbergNummer = feldbergWetter.apply(lambda x:True if -999.0 in list(x) else False, axis=1)
-numOfRows = len(feldbergNummer[feldbergNummer==True].index)
-print(numOfRows)
-"""
-
-
-windNummer = feldbergWetter.WindstaerkeMax==-999.0
-print(windNummer.sum())
-
-
+plt.subplot(1, 2, 1, title = 'Windstaerke Max')
+#plt.plot(feldbergWetter.index, feldbergWetter['Schneehoehe'])
 plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMax'])
-#plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMittel'])
+plt.subplot(1, 2, 2, title = 'Windstaerke Mittel')
+plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMittel'])
 #plt.plot(feldbergWetter.index[1000:1100], feldbergWetter['WindstaerkeMax'][1000:1100])
 plt.show()
+"""
+
+fig, ax = plt.subplots(1, 3)
+sns.boxplot(x='Hagel',y='Niederschlagshoehe',data=feldbergWetter, ax=ax[0])
+sns.boxplot(x='Hagel',y='Bewoelkung',data=feldbergWetter, ax=ax[1])
+sns.boxplot(x='Hagel',y='RelativeFeuchteMittel',data=feldbergWetter, ax=ax[2])
+plt.show()
+
+
+# Test ob ein Zusammenhang zwischen den Spalten zu erkennen ist
+print(feldbergWetter.corr())
+
+
 
