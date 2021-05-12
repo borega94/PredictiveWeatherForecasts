@@ -73,7 +73,7 @@ fehlwerteInSpalten = {
 }
 df_Fehlwerte = pd.DataFrame(fehlwerteInSpalten)
 # Liefert die Anzahl der Fehlwerte in jeder Spalte
-print(df_Fehlwerte.sum())
+#print(df_Fehlwerte.sum())
 
 # Spalte WindstaerkeMittel aufgrund zu vieler Fehlwerte droppen
 #feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
@@ -111,11 +111,32 @@ feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
 feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace=True)
 
 # Fehlwerte ersetzen
-feldbergWetter = feldbergWetter.replace('-999.0',np.nan)
-"""plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMax'])
-plt.show()"""
-print(feldbergWetter.tail(50))
-#feldbergWetter.interpolate()
-print(feldbergWetter.Schneehoehe.unique())
+feldbergWetter.replace(-999.0, np.nan, inplace=True)
+feldbergWetter.interpolate(inplace=True)
 
+# Plot WindstaerkeMax mit bereinigten Werten
+"""
+plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMax'])
+plt.xlabel('Datum')
+plt.ylabel('Windstaerke')
+plt.show()
+"""
+
+# Boxplots zum Vergleich der Spalten mit Hagel
+"""
+fig, ax = plt.subplots(2, 6)
+sns.boxplot(x='Hagel', y='WindstaerkeMax', data=feldbergWetter, ax=ax[0, 0])
+sns.boxplot(x='Hagel', y='Niederschlagshoehe', data=feldbergWetter, ax=ax[0, 1])
+sns.boxplot(x='Hagel', y='Niederschlagsform', data=feldbergWetter, ax=ax[0, 2])
+sns.boxplot(x='Hagel', y='Sonnenscheindauer', data=feldbergWetter, ax=ax[0, 3])
+sns.boxplot(x='Hagel', y='Schneehoehe', data=feldbergWetter, ax=ax[0, 4])
+sns.boxplot(x='Hagel', y='Bewoelkung', data=feldbergWetter, ax=ax[0, 5])
+sns.boxplot(x='Hagel', y='DampfdruckMittel', data=feldbergWetter, ax=ax[1, 0])
+sns.boxplot(x='Hagel', y='LuftdruckMittel', data=feldbergWetter, ax=ax[1, 1])
+sns.boxplot(x='Hagel', y='TemperaturMittel', data=feldbergWetter, ax=ax[1, 2])
+sns.boxplot(x='Hagel', y='RelativeFeuchteMittel', data=feldbergWetter, ax=ax[1, 3])
+sns.boxplot(x='Hagel', y='LufttemperaturMax', data=feldbergWetter, ax=ax[1, 4])
+sns.boxplot(x='Hagel', y='LufttemperaturMin2m', data=feldbergWetter, ax=ax[1, 5])
+plt.show()
+"""
 
