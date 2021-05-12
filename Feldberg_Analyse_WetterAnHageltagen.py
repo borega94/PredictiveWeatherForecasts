@@ -112,6 +112,7 @@ feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace
 
 # Fehlwerte ersetzen
 feldbergWetter.replace(-999.0, np.nan, inplace=True)
+# NaN-Werte werden durch linear interpolierte Werte, mit dem Wert vor und nach der Spalte ersetzt
 feldbergWetter.interpolate(inplace=True)
 
 # Plot WindstaerkeMax mit bereinigten Werten
