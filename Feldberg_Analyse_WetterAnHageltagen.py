@@ -79,25 +79,43 @@ print(df_Fehlwerte.sum())
 #feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
 
 
+# verschiedene Plots zum Wetter
 """
-plt.subplot(1, 2, 1, title = 'Windstaerke Max')
+plt.subplot(1, 3, 1, title = 'Windstaerke Max')
 #plt.plot(feldbergWetter.index, feldbergWetter['Schneehoehe'])
 plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMax'])
-plt.subplot(1, 2, 2, title = 'Windstaerke Mittel')
+plt.subplot(1, 3, 2, title = 'Windstaerke Mittel')
 plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMittel'])
+plt.subplot(1, 3, 3, title = 'Hagel')
+plt.plot(feldbergWetter.index, feldbergWetter['Hagel'])
 #plt.plot(feldbergWetter.index[1000:1100], feldbergWetter['WindstaerkeMax'][1000:1100])
 plt.show()
 """
 
+# verschiedene Boxplots um mögliche Zusammenhänge zu erkennen
+"""
 fig, ax = plt.subplots(1, 3)
-sns.boxplot(x='Hagel',y='Niederschlagshoehe',data=feldbergWetter, ax=ax[0])
-sns.boxplot(x='Hagel',y='Bewoelkung',data=feldbergWetter, ax=ax[1])
-sns.boxplot(x='Hagel',y='RelativeFeuchteMittel',data=feldbergWetter, ax=ax[2])
+sns.boxplot(x='Hagel', y='Niederschlagshoehe', data=feldbergWetter, ax=ax[0])
+sns.boxplot(x='Hagel', y='Bewoelkung', data=feldbergWetter, ax=ax[1])
+sns.boxplot(x='Hagel', y='RelativeFeuchteMittel', data=feldbergWetter, ax=ax[2])
 plt.show()
-
+"""
 
 # Test ob ein Zusammenhang zwischen den Spalten zu erkennen ist
-print(feldbergWetter.corr())
+#print(feldbergWetter.corr())
 
+# Droppen der Spalte Windstaerke Mittel, aufgrund zuvieler Fehlwerte
+feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
+
+# Löschen aller Zeilen bis zum 1.1.1955
+feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace=True)
+
+# Fehlwerte ersetzen
+feldbergWetter = feldbergWetter.replace('-999.0',np.nan)
+"""plt.plot(feldbergWetter.index, feldbergWetter['WindstaerkeMax'])
+plt.show()"""
+print(feldbergWetter.tail(50))
+#feldbergWetter.interpolate()
+print(feldbergWetter.Schneehoehe.unique())
 
 
