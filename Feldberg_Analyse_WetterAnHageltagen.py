@@ -107,6 +107,15 @@ plt.show()
 # Droppen der Spalte Windstaerke Mittel, aufgrund zuvieler Fehlwerte
 feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
 
+feldbergWetter.drop(columns=["STATIONS_ID"], inplace=True)
+feldbergWetter.drop(columns=["Niederschlagsform"], inplace=True)
+feldbergWetter.drop(columns=["DampfdruckMittel"], inplace=True)
+feldbergWetter.drop(columns=["TemperaturMittel"], inplace=True)
+feldbergWetter.drop(columns=["LufttemperaturMin5cm"], inplace=True)
+feldbergWetter.drop(columns=["RelativeFeuchteMittel"], inplace=True)
+feldbergWetter.drop(columns=["LuftdruckMittel"], inplace=True)
+
+
 # Löschen aller Zeilen bis zum 1.1.1955
 feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace=True)
 
@@ -141,3 +150,4 @@ sns.boxplot(x='Hagel', y='LufttemperaturMin2m', data=feldbergWetter, ax=ax[1, 5]
 plt.show()
 """
 
+print(feldbergWetter)
