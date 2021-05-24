@@ -72,5 +72,4 @@ def neuronal_network(X_train, y_train, X_test, y_test, X_val, y_val):
 
     predictions = regressor.predict(input_fn=wx_input_fn(X_test, y_test, num_epochs=1, shuffle=False))
 
-
     return
