@@ -12,11 +12,12 @@ import pandas as pd
 import seaborn as sb
 import matplotlib.pyplot as plt
 
-INPUT = pd.read_csv('produkt_wetter_tag_19490101_20140131_01346.txt', sep=";")
+#INPUT = pd.read_csv('produkt_wetter_tag_19490101_20140131_01346.txt', sep=";")
 
-def dataPrepare(input_data = INPUT):
+def dataPrepare(input_data = None):
     
-    feldbergHageltage = INPUT
+    feldbergHageltage = input_data
+
     # Mess_Datum in Datentyp Datetime umwandeln und als Index setzen
     feldbergHageltage['MESS_DATUM'] = pd.to_datetime(arg=feldbergHageltage['MESS_DATUM'], format='%Y%m%d')
     feldbergHageltage.set_index('MESS_DATUM', inplace=True)
@@ -29,6 +30,12 @@ def dataPrepare(input_data = INPUT):
     feldbergHageltage = feldbergHageltage['HAGEL']
     # Spalte HAGEL in feldbergWetter angehängt
     feldbergWetter['HAGEL'] = feldbergHageltage
+
+    # Kontrolle welche Werte in der Spalte HAGEL auftreten = 0, 1, 99
+    #feldbergWetter['HAGEL'].unique()
+
+    # Löscht alle Zeilen in den irgendwo nan steht - löscht möglicherweise auch Zeilen die nicht gelöscht werden sollen
+    #print(feldbergWetter.dropna())
 
     # Löscht alle Zeilen in der Spalte HAGEL in denen nan steht
     feldbergWetter = feldbergWetter[feldbergWetter['HAGEL'].notna()]
@@ -44,10 +51,19 @@ def dataPrepare(input_data = INPUT):
                                     ' TXK': 'LufttemperaturMax', ' TNK': 'LufttemperaturMin2m', ' TGK': 'LufttemperaturMin5cm',
                                     'HAGEL': 'Hagel'})
 
+    # ---------------------------------------------------------------------------------------
+    # Zwischenstand : Datei mit Werten in Dataframe umgewandelt und Spalten eindeutig benannt.
+    # Hagel in der Tabelle mit dem Wetter angehängt
+    # Zeilen gelöscht in denen kein Wert für Hagel vorhanden ist
+    # ---------------------------------------------------------------------------------------
+
+    # Anzeigen der Spalten
+    # print(feldbergWetter.columns)
 
     # Anzeigen aller Spalten bei einer Ausgabe mit 'print'
     pd.set_option('max_columns', None)
     #print(feldbergWetter.head(20))
+
 
     # -999.0 Werte in jeder Spalte zählen / -999.0 = Fehlwert
     fehlwerteInSpalten = {
@@ -74,21 +90,29 @@ def dataPrepare(input_data = INPUT):
     # Spalte WindstaerkeMittel aufgrund zu vieler Fehlwerte droppen
     #feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
 
+    # Test ob ein Zusammenhang zwischen den Spalten zu erkennen ist
+    #print(feldbergWetter.corr())
+
     # Droppen der Spalte Windstaerke Mittel, aufgrund zuvieler Fehlwerte
     feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
+
+    feldbergWetter.drop(columns=["STATIONS_ID"], inplace=True)
+    feldbergWetter.drop(columns=["Niederschlagsform"], inplace=True)
+    feldbergWetter.drop(columns=["DampfdruckMittel"], inplace=True)
+    feldbergWetter.drop(columns=["TemperaturMittel"], inplace=True)
+    feldbergWetter.drop(columns=["LufttemperaturMin5cm"], inplace=True)
+    feldbergWetter.drop(columns=["RelativeFeuchteMittel"], inplace=True)
+    feldbergWetter.drop(columns=["LuftdruckMittel"], inplace=True)
+
 
     # Löschen aller Zeilen bis zum 1.1.1955
     feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace=True)
 
-    feldbergWetter.drop(feldbergWetter["STATIONS_ID"], inplace=True)
-    print(feldbergWetter)
-    input()
-    
     # Fehlwerte ersetzen
     feldbergWetter.replace(-999.0, np.nan, inplace=True)
     # NaN-Werte werden durch linear interpolierte Werte, mit dem Wert vor und nach der Spalte ersetzt
     feldbergWetter.interpolate(inplace=True)
-    
-    #print(feldbergWetter)
-    
+
+
+        
     return feldbergWetter
