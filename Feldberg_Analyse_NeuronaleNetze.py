@@ -12,7 +12,7 @@ import tensorflow as tf
 feldbergHageltage = pd.read_csv('produkt_wetter_tag_19490101_20140131_01346.txt', sep=";")
 
 # Mess_Datum in Datentyp Datetime umwandeln und als Index setzen
-feldbergHageltage['MESS_DATUM'] = pd.to_datetime(arg=feldbergHageltage['MESS_DATUM'], format='%Y%m%d')
+#feldbergHageltage['MESS_DATUM'] = pd.to_datetime(arg=feldbergHageltage['MESS_DATUM'], format='%Y%m%d')
 feldbergHageltage.set_index('MESS_DATUM', inplace=True)
 
 feldbergWetter = pd.read_csv('produkt_klima_tag_19450101_20201231_01346.txt', sep=";")
