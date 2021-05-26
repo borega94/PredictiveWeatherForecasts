@@ -106,7 +106,7 @@ def dataPrepare(input_data = None):
 
 
     # Löschen aller Zeilen bis zum 1.1.1955
-    feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace=True)
+    feldbergWetter.drop(feldbergWetter.loc['19490101':'19541231'].index, inplace=True)
 
     # Fehlwerte ersetzen
     feldbergWetter.replace(-999.0, np.nan, inplace=True)
