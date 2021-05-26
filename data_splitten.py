@@ -20,3 +20,12 @@ def split_data(input_x, input_y):
     X_test, X_val, y_test, y_val = train_test_split(X_tmp, y_tmp, test_size=0.5, shuffle=False)
 
     return X_train, y_train, X_test, y_test, X_val, y_val
+
+def split_data_simple(input_x, input_y):
+
+    X = input_x
+    y = input_y
+
+    X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+
+    return X_train, X_test, Y_train, Y_test
