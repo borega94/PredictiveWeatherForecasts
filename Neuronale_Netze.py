@@ -86,5 +86,7 @@ def neuronal_network(X_train, y_train, X_test, y_test, X_val, y_val):
     plt.xlabel('Training steps (Epochs = steps / 2)')
     plt.ylabel('Loss (SSE)')
     plt.show()
-    #pred = np.array([p['predictions'][0] for p in predictions])
+
+    pred = np.array([p['predictions'][0] for p in predictions])
+    print(pred)
     return
