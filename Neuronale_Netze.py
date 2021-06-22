@@ -52,17 +52,18 @@ def neuronal_network(X_train, y_train, X_test, y_test, X_val, y_val):
                                           model_dir='tf_wx_model',
                                           label_dimension=1)
 
-    def wx_input_fn(X, y=None, num_epochs=None, shuffle=True, batch_size=4):
+    def wx_input_fn(X, y=None, num_epochs=None, shuffle=True, batch_size=40):
         return tf.compat.v1.estimator.inputs.pandas_input_fn(x=X,
                                                              y=y,
                                                              num_epochs=num_epochs,
                                                              shuffle=shuffle,
                                                              batch_size=batch_size)
 
-    evaluations = []
-    STEPS = 40
 
-    for i in range(10):
+    evaluations = []
+    STEPS = 400
+
+    for i in range(100):
         regressor.train(input_fn=wx_input_fn(X_train, y_train, num_epochs=None, shuffle=True), steps=STEPS)
         evaluations.append(regressor.evaluate(input_fn=wx_input_fn(X_val,
                                                                    y_val,
@@ -88,5 +89,15 @@ def neuronal_network(X_train, y_train, X_test, y_test, X_val, y_val):
     plt.show()
 
     pred = np.array([p['predictions'][0] for p in predictions])
-    print(pred)
+
+    ergebnis = pd.DataFrame(columns=['Tag', 'Hagel', 'Vorhersage'])
+    ergebnis['Tag'] = X_test.index
+    ergebnis.set_index('Tag', inplace=True)
+    ergebnis['Hagel']=y_test
+    ergebnis['Vorhersage'] = pred
+    #print(y_test)
+    #print(ergebnis.info)
+    print(ergebnis[(ergebnis['Vorhersage'] > 0.5) & (ergebnis['Hagel']==1.0)])
+    print(ergebnis['Hagel'].sum())
+
     return
