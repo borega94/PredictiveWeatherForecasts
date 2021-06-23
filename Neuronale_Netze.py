@@ -52,24 +52,24 @@ def neuronal_network(X_train, y_train, X_test, y_test, X_val, y_val):
                                           model_dir='tf_wx_model',
                                           label_dimension=1)
 
-    def wx_input_fn(X, y=None, num_epochs=None, shuffle=True, batch_size=40):
+    def wx_input_fn(X, y=None, num_epochs=None, shuffle=True, batch_size=3000):
         return tf.compat.v1.estimator.inputs.pandas_input_fn(x=X,
                                                              y=y,
                                                              num_epochs=num_epochs,
                                                              shuffle=shuffle,
                                                              batch_size=batch_size)
 
-
     evaluations = []
-    STEPS = 400
+    STEPS = 40
 
-    for i in range(100):
+    for i in range(10):
         regressor.train(input_fn=wx_input_fn(X_train, y_train, num_epochs=None, shuffle=True), steps=STEPS)
         evaluations.append(regressor.evaluate(input_fn=wx_input_fn(X_val,
                                                                    y_val,
                                                                    num_epochs=1,
                                                                    shuffle=False)))
         print(evaluations[-1])
+        print(i)
 
     print(evaluations[-1])
 
@@ -97,7 +97,16 @@ def neuronal_network(X_train, y_train, X_test, y_test, X_val, y_val):
     ergebnis['Vorhersage'] = pred
     #print(y_test)
     #print(ergebnis.info)
+    print('Tage an denen es gehagelt hat und die Vorhersage größer 0,5 war: ')
     print(ergebnis[(ergebnis['Vorhersage'] > 0.5) & (ergebnis['Hagel']==1.0)])
-    print(ergebnis['Hagel'].sum())
+    print('Anzahl der Hageltage im Datensatz: ', ergebnis['Hagel'].sum())
+    print('Hagelvorhersage > 0.5: ')
+    print(ergebnis[ergebnis['Vorhersage']>0.5])
+    """
+    counterFunc = ergebnis.apply(
+        lambda x: True if x[2] > 0.5 else False, axis=2)
+    numOfRows = len(counterFunc[counterFunc == True].index)
+    print('Tage an denen Hagelvorhersage > 0.5: ', numOfRows)"""
+
 
     return
