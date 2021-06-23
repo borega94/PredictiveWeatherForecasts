@@ -5,6 +5,7 @@ Date: 20.05.2021
 Description: 
 Dieses Skript soll den Decision Tree aufsetzen und evaluieren
 """
+from operator import not_
 from numpy.core.arrayprint import printoptions
 from numpy.lib.function_base import gradient
 from sklearn import tree
@@ -14,11 +15,13 @@ from data_to_timeseries import toTimeseries
 from plotten import boxplots
 from Neuronale_Netze import neuronal_network
 from data_splitten import split_data_simple
+from accuracy_score_altered import accuracy_score as accuracy_score_alt
 import numpy as np
 import pandas as pd
 import graphviz
 
 vis = False
+alt = True
 
 # Daten importieren
 INPUT = pd.read_csv('produkt_wetter_tag_19490101_20140131_01346.txt', sep=";")
@@ -60,33 +63,29 @@ anzahl_gelöscht = 0
 
 lösch_index = []
 
-for i, rows in acc_Gruth.iteritems():    
-    if rows == -1 & acc_Pred.iloc[manuel_index]==-1:
-        lösch_index.append(manuel_index)
-        anzahl_gelöscht += 1
-    manuel_index = manuel_index + 1
+if not alt:
+    for i, rows in acc_Gruth.iteritems():    
+        if rows == -1 & acc_Pred.iloc[manuel_index]==-1:
+            lösch_index.append(manuel_index)
+            anzahl_gelöscht += 1
+        manuel_index = manuel_index + 1
 
-print(lösch_index)
-print(anzahl_gelöscht)
-print(acc_Gruth)
-print(acc_Pred)
+    acc_Gruth = acc_Gruth.drop(acc_Gruth.index[lösch_index])
+    acc_Pred = acc_Pred.drop(acc_Pred.index[lösch_index])
 
-reihen = acc_Gruth.index[lösch_index]
-acc_Gruth = acc_Gruth.drop(acc_Gruth.index[lösch_index])
-acc_Pred = acc_Pred.drop(acc_Pred.index[lösch_index])
-
-
-print(acc_Gruth)
-print(acc_Pred)
-
+# Berechnen der Score
+if alt:
+    accuracy_score = accuracy_score_alt
 accuracy_prozent = accuracy_score(acc_Gruth, acc_Pred, normalize = True)
 accuracy_absolut = accuracy_score(acc_Gruth, acc_Pred, normalize = False)
 
 print("Prozentual richtig: ", accuracy_prozent)
 print("Absolut richtig: ", accuracy_absolut)
 
+# Visualisierung des Trees
 if vis:
-    # Visualisierung des Trees
     dot_data = tree.export_graphviz(clf, out_file=None, feature_names=X_train.columns, class_names=["Hagel", "Kein Hagel"], filled=True, rounded =True)
     graph = graphviz.Source(dot_data)
     graph.render("DecisionTree")
+
+#TODO Nicht auf den Tag genau sondern +- 1 Tag miteinbeziehen
