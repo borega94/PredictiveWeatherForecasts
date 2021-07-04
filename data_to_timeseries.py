@@ -56,4 +56,4 @@ def toTimeseries(File = None):
     x_dataset = tage_312.drop(columns="Tag3-Hagel")
     y_dataset = tage_312["Tag3-Hagel"]
 
-    return x_dataset, y_dataset
+    return x_dataset, y_dataset, data

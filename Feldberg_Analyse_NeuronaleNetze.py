@@ -12,7 +12,7 @@ import tensorflow as tf
 feldbergHageltage = pd.read_csv('produkt_wetter_tag_19490101_20140131_01346.txt', sep=";")
 
 # Mess_Datum in Datentyp Datetime umwandeln und als Index setzen
-feldbergHageltage['MESS_DATUM'] = pd.to_datetime(arg=feldbergHageltage['MESS_DATUM'], format='%Y%m%d')
+#feldbergHageltage['MESS_DATUM'] = pd.to_datetime(arg=feldbergHageltage['MESS_DATUM'], format='%Y%m%d')
 feldbergHageltage.set_index('MESS_DATUM', inplace=True)
 
 feldbergWetter = pd.read_csv('produkt_klima_tag_19450101_20201231_01346.txt', sep=";")
@@ -114,11 +114,11 @@ feldbergWetter = feldbergWetter.drop(columns=['WindstaerkeMittel'])
 
 # Löschen aller Zeilen bis zum 1.1.1955
 feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace=True)
-
 # Fehlwerte ersetzen
 feldbergWetter.replace(-999.0, np.nan, inplace=True)
 # NaN-Werte werden durch linear interpolierte Werte, mit dem Wert vor und nach der Spalte ersetzt
 feldbergWetter.interpolate(inplace=True)
+
 
 # Plot WindstaerkeMax mit bereinigten Werten
 """
@@ -152,13 +152,14 @@ X = feldbergWetter[[col for col in feldbergWetter.columns if col != 'Hagel']]
 # y will be a pandas series of the meantempm
 y = feldbergWetter['Hagel']
 
+print(X.head(5))
 # split data into training set and a temporary set using sklearn.model_selection.traing_test_split
 #X_train, X_tmp, y_train, y_tmp = train_test_split(X, y, test_size=0.2, random_state=23)
 X_train, X_tmp, y_train, y_tmp = train_test_split(X, y, test_size=0.2, shuffle=False)
 
 # take the remaining 20% of data in X_tmp, y_tmp and split them evenly
 #X_test, X_val, y_test, y_val = train_test_split(X_tmp, y_tmp, test_size=0.5, random_state=23)
-X_test, X_val, y_test, y_val = train_test_split(X_tmp, y_tmp, test_size=0.5,shuffle=False)
+X_test, X_val, y_test, y_val = train_test_split(X_tmp, y_tmp, test_size=0.5, shuffle=False)
 
 X_train.shape, X_test.shape, X_val.shape
 print("Training instances   {}, Training features   {}".format(X_train.shape[0], X_train.shape[1]))

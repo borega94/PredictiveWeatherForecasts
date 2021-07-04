@@ -19,11 +19,11 @@ def dataPrepare(input_data = None):
     feldbergHageltage = input_data
 
     # Mess_Datum in Datentyp Datetime umwandeln und als Index setzen
-    feldbergHageltage['MESS_DATUM'] = pd.to_datetime(arg=feldbergHageltage['MESS_DATUM'], format='%Y%m%d')
+    #feldbergHageltage['MESS_DATUM'] = pd.to_datetime(arg=feldbergHageltage['MESS_DATUM'], format='%Y%m%d')
     feldbergHageltage.set_index('MESS_DATUM', inplace=True)
 
     feldbergWetter = pd.read_csv('produkt_klima_tag_19450101_20201231_01346.txt', sep=";")
-    feldbergWetter['MESS_DATUM'] = pd.to_datetime(arg=feldbergWetter['MESS_DATUM'], format='%Y%m%d')
+    #feldbergWetter['MESS_DATUM'] = pd.to_datetime(arg=feldbergWetter['MESS_DATUM'], format='%Y%m%d')
     feldbergWetter.set_index('MESS_DATUM', inplace=True)
 
     # feldbergHageltage enthält nur noch Index und die Spalte HAGEL
@@ -106,7 +106,7 @@ def dataPrepare(input_data = None):
 
 
     # Löschen aller Zeilen bis zum 1.1.1955
-    feldbergWetter.drop(feldbergWetter.loc['1949-01-01':'1954-12-31'].index, inplace=True)
+    feldbergWetter.drop(feldbergWetter.loc['19490101':'19541231'].index, inplace=True)
 
     # Fehlwerte ersetzen
     feldbergWetter.replace(-999.0, np.nan, inplace=True)
