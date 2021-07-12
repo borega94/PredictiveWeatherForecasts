@@ -2,12 +2,18 @@
 
 def accuracy_score(gtruth, pred, normalize):
     """Diese Funktion ersetzt die accuracy score function von sckit learn
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     Args:
         gtruth (pd.series): Werte richtig
         pred (pd.series): Werte vorhergesagt
         normalize (boolean): Prozent oder Absolut
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     Returns:
         bool/int: Entweder absolute Anzahl oder in Prozent
     """
@@ -51,4 +57,8 @@ def accuracy_score(gtruth, pred, normalize):
 
     print(anzahl_korrekt)
     print(gtruth.size-anzahl)
+<<<<<<< Updated upstream
     return acc
+=======
+    return acc
+>>>>>>> Stashed changes
